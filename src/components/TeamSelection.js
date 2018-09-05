@@ -3,6 +3,7 @@ import {Switch,Route} from 'react-router-dom';
 import TeamForm from './TeamForm';
 import StartMatchForm from './StartMatchForm';
 import ReportForm from './ReportForm';
+import TeamModal from './TeamModal';
 import { translate } from 'react-i18next';
 
 import * as realApi from '../api/Api';
@@ -59,10 +60,20 @@ class TeamSelection extends React.Component {
 
 	// Change selected team. Also save id to localstorage from where we can fetch it if user decides to refresh or similar
 	handleChange = (event) => {
+		console.log(event.target.value);
 		this.setState({ currentTeam: event.target.value,
 			currentSport: this.state.teams.find( e => e._id === event.target.value ).sportId.name });
 		localStorage.setItem('currentTeam', event.target.value);
 	}
+
+	createNewTeam(event){	
+		console.log("new team"); 
+	}
+
+	saveTeam(team){
+		console.log(team);
+	} 
+
 
 	render(){
 		const { t } = this.props;
@@ -70,12 +81,13 @@ class TeamSelection extends React.Component {
 		let zeroTeams = this.state.teams && this.state.teams.length;
 
 		// If no teams then don't print dropdown
+		// TeamModal opens popup where user can add new teams
 
 		return(
 			<div className="page-header"><h3>{ t('INDEX.CHOOSE_TEAM') }</h3>
-			<div className="row">
+			<div className="row" name="teamSelector">
 				{ zeroTeams !== 0 &&
-				<div className="col-md-4">
+				<div className="col-md-4" name="teamSelect">
 					{ t('INDEX.NAME') }: 
 						<select name="selectedTeam" onChange={this.handleChange} value={this.state.currentTeam}>
 						{this.state.teams && this.state.teams.map(val => (
@@ -85,15 +97,17 @@ class TeamSelection extends React.Component {
 				</div>
 				}
 				{ zeroTeams ? (
-				<div className="col-md-4">
+				<div className="col-md-4" name="teamSport">
 					&nbsp;{ t('INDEX.SPORT') }: { t('SPORT.'+this.state.currentSport) }
 				</div>
 				) : (
 				<div className="col-md-8"> { t('INDEX.CREATEFIRST') }</div>
 				)}
-				<div className="col-md-4"><p className="text-right">
-					<button type="button" className="btn btn-success">{ t('INDEX.CREATE_TEAM') }</button>
+				<div className="col-md-4" name="newTeamButtonDiv"><p className="text-right">
+					<button type="button" className="btn btn-success" name="newTeamButton" data-toggle="modal" data-target="#teamModal">
+						{t('INDEX.CREATE_TEAM')}</button>
 				</p></div>
+				<TeamModal saveTeam={this.saveTeam} modalTitle={ t('INDEX.CREATE_TEAM') } />
 			</div>
 			<main>
 				<Switch>

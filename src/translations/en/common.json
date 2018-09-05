@@ -32,7 +32,7 @@
 	"INDEX.MATCH": "Start match",
 	"INDEX.REPORT": "Reports",
 	"INDEX.LOGOUT": "Logout",
-	"INDEX.CREATEFIRST":"First create team by pushing 'Create team' button",
+	"INDEX.CREATEFIRST":"Create first team",
 
 	"TEAM.NAME": "Name",
 	"TEAM.SPORT": "Sport",
