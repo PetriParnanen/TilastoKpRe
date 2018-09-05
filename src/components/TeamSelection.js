@@ -40,6 +40,7 @@ class TeamSelection extends React.Component {
 							currentSport: null });
 						localStorage.removeItem('currentTeam');
 					} else if (!this.state.currentTeam) { 
+						
 					// if no existing team found in state then we will try to get from localstorage if not there then first on list
 					// if found from state then just keep it
 						if (localStorage.getItem('currentTeam')){

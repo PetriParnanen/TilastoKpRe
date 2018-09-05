@@ -1,5 +1,6 @@
 import React from "react";
 import { translate } from 'react-i18next';
+import i18n from './i18n';
 
 class TeamModal extends React.Component {
 	constructor(props) {
@@ -7,16 +8,18 @@ class TeamModal extends React.Component {
 
 		this.state = {
 			name: "",
-			sport: ""
+			sport: "",
+			id: ""
 		};
 
 		this.handleSave = this.handleSave.bind(this);
 	}
 
-	componentWillUnmount(){
+	componentWillReceiveProps(nextProps){
 		this.setState({ 
-			name: null,
-			sport: null
+			name: "",
+			sport: "",
+			id: ""
 		});
 	}
 
@@ -30,7 +33,11 @@ class TeamModal extends React.Component {
 
 	handleSave() {
 		const team = this.state;
-		this.props.saveTeam(team);
+		if (team.name === null || team.name === ""){
+			window.alert(i18n.t('TEAM.ERR.NAMESPORTMANDATORY'));
+		} else {
+			this.props.saveTeam(team);
+		}
 	}
 
 	render() {
