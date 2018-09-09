@@ -16,6 +16,7 @@ class Main extends React.Component{
 
 	// login return used token which is needed when doing api requests
 	onLogin(value){
+		console.log("onlogin "+value);
 		if (value == null || value.username == null || value.username === '' || value.password == null || value.password === ''){
 			window.alert(i18n.t('LOGIN.GIVE_DATA'));
 		} else {
@@ -25,7 +26,7 @@ class Main extends React.Component{
 					this.props.willLogin();
 				})
 				.catch(error => {
-					window.alert(i18n.t(error.response.data.message));
+					window.alert("YY"+i18n.t(error.response.data.message));
 				});
 		}
 	}
@@ -40,7 +41,7 @@ class Main extends React.Component{
 					window.alert(i18n.t('LOGIN.REG_SUCCESS'));
 				})
 				.catch(error => {
-					window.alert(i18n.t(error.response.data.message));
+					window.alert("TT"+i18n.t(error.response.data.message));
 				});
 		}
 	}
