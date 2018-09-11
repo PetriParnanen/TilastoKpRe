@@ -55,6 +55,8 @@ class Header extends React.Component{
 Header.propTypes = {
 	isLogged: PropTypes.bool,
 	willLogout: PropTypes.func,
+	lang: PropTypes.string,
+	languageChange: PropTypes.func,
 }
 
 export default translate('common')(Header);

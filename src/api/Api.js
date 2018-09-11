@@ -11,7 +11,7 @@ export const fetchSports = () => {
 	return axios.get(apiServer+'/sportlist', { headers: { 'x-access-token': userApi.getToken() }})
 }
 
-//all teams under user
+//all teams under user. right now api doesn't return all teams
 export const fetchTeams = () => {
 	console.log("api teams");
 	return axios.get(apiServer+'/teamlist', { headers: { 'x-access-token': userApi.getToken() }})
@@ -27,14 +27,27 @@ export const fetchTeam = teamId => {
 //add new team
 export const saveTeam = team => {
 	console.log("save team "+team.sport);
-	if (!team) { return Promise.reject('DB.ERR.INCORRECTFETCHREQUEST') };
-	//return Promise.reject('DB.ERR.INCORRECTFETCHREQUEST');
-	return axios.post(apiServer+'/teamlist', team , { headers: { 'x-access-token': userApi.getToken(), 'content-type': 'application/json' }})
+	if (!team) { return Promise.reject('DB.ERR.INCORRECTFETCHREQUEST') }; // if no team id return promise reject
+	return axios.post(apiServer+'/teamlist', team , { headers: { 'x-access-token': userApi.getToken() }})
+}
+
+//update existing team
+export const updateTeam = team => {
+	console.log("update team "+team.name);
+	if (!team) { return Promise.reject('DB.ERR.INCORRECTFETCHREQUEST') }; // if no team id return promise reject
+	return axios.put(apiServer+`/teamlist/${team._id}`, team , { headers: { 'x-access-token': userApi.getToken() }})
+}
+
+//delete selected team
+export const deleteTeam = (teamId) => {
+	console.log("delete team "+teamId);
+	if (!teamId) { return Promise.reject('DB.ERR.INCORRECTFETCHREQUEST') }; // if no team id return promise reject
+	return axios.delete(apiServer+`/teamlist/${teamId}`, { headers: { 'x-access-token': userApi.getToken() }})
 }
 
 //all players under a team
 export const fetchPlayers = (teamId) => {
-		console.log("api players for team "+teamId);
-		if (!teamId) { return Promise.reject('DB.ERR.INCORRECTFETCHREQUEST') }; // if no team id return promise reject
-		return axios.get(apiServer+`/playerlist/team/${teamId}`, { headers: { 'x-access-token': userApi.getToken() }})
+	console.log("api players for team "+teamId);
+	if (!teamId) { return Promise.reject('DB.ERR.INCORRECTFETCHREQUEST') }; // if no team id return promise reject
+	return axios.get(apiServer+`/playerlist/team/${teamId}`, { headers: { 'x-access-token': userApi.getToken() }})
 }

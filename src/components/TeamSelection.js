@@ -1,9 +1,9 @@
 import React from "react";
-import {Switch,Route} from 'react-router-dom';
+import {Switch,Route,withRouter} from 'react-router-dom';
 import TeamForm from './TeamForm';
 import StartMatchForm from './StartMatchForm';
 import ReportForm from './ReportForm';
-import TeamModal from './TeamModal';
+import NewTeamModal from './NewTeamModal';
 import { translate } from 'react-i18next';
 
 import * as realApi from '../api/Api';
@@ -79,8 +79,6 @@ class TeamSelection extends React.Component {
 		realApi.fetchTeams().then(teams => {
 			this.setState({ teams: teams.data });
 
-			console.log("XXX");
-
 			//choose right active team.
 			//if no teams then no teams to select
 			//if new created team it will be active
@@ -93,7 +91,6 @@ class TeamSelection extends React.Component {
 					currentSport: "" });
 				localStorage.removeItem('currentTeam');
 			} else if (this.state.currentTeam) {
-				console.log(this.state.currentTeam);
 				this.setState({ currentSport: this.state.teams.find( e => e._id === this.state.currentTeam).sportId.name })
 			} else if (!this.state.currentTeam) {
 				// if found in storage activate it
@@ -112,17 +109,18 @@ class TeamSelection extends React.Component {
 
 	}
 
-	/*createNewTeam(event){	
-		console.log("new team"); 
-	}*/
-
 	saveTeam = (team) => {
-		console.log(team._id);
 		this.setState({ currentTeam: team._id });
 		localStorage.setItem('currentTeam', team._id);
 		this.updateTeams();
-	} 
+	}
 
+	deleteTeam = () => {
+		this.setState({ currentTeam: "" });
+		localStorage.setItem('currentTeam', "");
+		this.props.history.push('/');
+		this.updateTeams();
+	}
 
 	render(){
 		const { t } = this.props;
@@ -154,14 +152,15 @@ class TeamSelection extends React.Component {
 				<div className="col-md-8"> { t('INDEX.CREATEFIRST') }</div>
 				)}
 				<div className="col-md-4" name="newTeamButtonDiv"><p className="text-right">
-					<button type="button" className="btn btn-success" name="newTeamButton" data-toggle="modal" data-target="#teamModal">
+					<button type="button" className="btn btn-success" name="newTeamButton" data-toggle="modal" data-target="#newTeamModal">
 						{ t('INDEX.CREATE_TEAM') }</button>
 				</p></div>
-				<TeamModal saveTeam={this.saveTeam} modalTitle={ t('INDEX.CREATE_TEAM') } />
+				<NewTeamModal saveTeam={this.saveTeam} modalTitle={ t('INDEX.CREATE_TEAM') } />
 			</div>
 			<main>
 				<Switch>
-					<Route exact path='/team' render={() => (<TeamForm teamId={this.state.currentTeam} teamsList={this.state.teams} /> )} />
+					<Route exact path='/team' render={() => (<TeamForm teamId={this.state.currentTeam} teamsList={this.state.teams} 
+						saveTeam={this.saveTeam} deleteTeam={this.deleteTeam} /> )} />
 					<Route exact path='/match' render={() => (<StartMatchForm /> )} />
 					<Route exact path='/report' render={() => (<ReportForm />)} />
 				</Switch>
@@ -169,7 +168,6 @@ class TeamSelection extends React.Component {
 			</div>
 		)
 	}
-
 }
 
-export default translate('common')(TeamSelection);
+export default translate('common')(withRouter(TeamSelection));

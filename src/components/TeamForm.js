@@ -1,12 +1,11 @@
 import React from "react";
-import TeamModal from './TeamModal';
+import EditTeamModal from './EditTeamModal';
 //import PlayerModal from './PlayerModal';
 import { translate } from 'react-i18next';
 
 import * as realApi from '../api/Api';
 import i18n from './i18n';
-
-//translator have some probs with this. gotta check
+import PropTypes from 'prop-types';
 
 class TeamForm extends React.Component {
 	constructor(props){
@@ -32,36 +31,32 @@ class TeamForm extends React.Component {
 	}
 
 	static getDerivedStateFromProps(nextProps, prevState) {
-		if (prevState.hereIam){
-			return({hereIam: false});
-		} else {
-			return({hereIam: true});
+		if (nextProps.teamId !== prevState.teamId && prevState.rerender){
+			return({rerender: false});
 		}
 	}
-
-	/*shouldComponentUpdate(nextProps, nextState){
-		console.log(nextProps.teamId);
-		console.log(this.props.teamId);
-		return (nextProps.teamId === this.props.teamId?false:true);
-	}*/
 
 	//update players list
 	updatePlayers = () => {
 		console.log("fetching players");
-		console.log(this.state);
-		console.log(this.props);
-		if (this.state.hereIam){
+		if (this.props.teamId && !this.state.rerender){
+			console.log("really fetching players");
 			realApi.fetchPlayers(this.props.teamId).then(apiPlayers => {
 				this.players = apiPlayers.data;
-				//this.setState({players: apiPlayers.data});
-				this.setState({players: apiPlayers.data});
+				this.setState({players: apiPlayers.data, rerender: true, teamId: this.props.teamId});
 			}).catch(() => window.alert(i18n.t('DB.ERR.DBERROR')));
 		}
 	}
 
+	updateTeam = (team) => {
+		this.props.saveTeam(team);
+	}
+
 	//for deleting selected team
 	deleteTeam(){
-
+		realApi.deleteTeam(this.props.teamId).then(() => {
+			this.props.deleteTeam();
+		}).catch(() => window.alert(i18n.t('DB.ERR.DBERROR')));
 	}
 
 	render(){
@@ -85,8 +80,10 @@ class TeamForm extends React.Component {
 				<div className="row">
 					<div className="col-md-2"><b>{ t('TEAM.NAME') }</b></div>
 					<div className="col-md-2">{ teamName }</div>
-					<div className="col-md-2"><button type="button" className="btn btn-primary">{ t('TEAM.EDIT_TEAM') }</button></div>
+					<div className="col-md-2"><button type="button" className="btn btn-primary" name="editTeamButton" data-toggle="modal" data-target="#editTeamModal">
+						{ t('TEAM.EDIT_TEAM') }</button></div>
 				</div>
+				<EditTeamModal updateTeam={this.updateTeam} modalTitle={ t('TEAM.EDIT_TEAM') } team={teamT} />
 
 				<div className="row">
 					<div className="col-md-2"><b>{ t('TEAM.SPORT') }</b></div>
@@ -102,10 +99,23 @@ class TeamForm extends React.Component {
 
 					</div>
 				</div>
+				<div className="row">
+					<div className="col-md-8">
+						<p className="text-center">
+							<button type="button" className="btn btn-success">{ t('TEAM.ADD_PLAYER') }</button>&nbsp;
+							<button type="button" className="btn btn-warning" onClick={this.deleteTeam} >{ t('TEAM.REMOVE_TEAM') }</button>
+						</p>
+					</div>
+				</div>
 			</div>
 		)
 	}
+}
 
+TeamForm.propTypes = {
+	teamId: PropTypes.string,
+	teamList: PropTypes.array,
+	saveTeam: PropTypes.func,
 }
 
 export default translate('common')(TeamForm);

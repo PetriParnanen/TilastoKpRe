@@ -3,6 +3,7 @@ import {Route} from 'react-router-dom';
 import LoginForm from './LoginForm';
 import TeamSelection from './TeamSelection';
 import * as userApi from '../api/User';
+import PropTypes from 'prop-types';
 
 import i18n from './i18n';
 
@@ -59,6 +60,10 @@ class Main extends React.Component{
 			))
 		)
 	}
+}
+
+Main.propTypes = {
+	willLogin: PropTypes.func,
 }
 
 export default Main;
