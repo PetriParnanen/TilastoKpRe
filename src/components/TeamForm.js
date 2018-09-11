@@ -67,13 +67,15 @@ class TeamForm extends React.Component {
 				<h5>loading</h5>
 			)
 		};
+		// if no teams under user just print empty page. You could redirect them back to home
+		if (this.props.teamsList.length < 1){ return ("") };
 
 		const { t } = this.props;
 
 		// just in case if team is not found it will print empty and not an error
 		const teamT = this.props.teamsList.find( e => e._id === this.props.teamId );
-		const teamName = (typeof(teamT) === "undefined"?"":teamT.name);
-		const teamSport = (typeof(teamT) === "undefined"?"":teamT.sportId.name);
+		const teamName = teamT.name;
+		const teamSport = teamT.sportId.name;
 
 		return (
 			<div className="page-header"><h4>{ t('INDEX.TEAM') }</h4>
