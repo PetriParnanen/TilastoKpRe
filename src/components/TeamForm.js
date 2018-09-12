@@ -1,6 +1,6 @@
 import React from "react";
 import EditTeamModal from './EditTeamModal';
-//import PlayerModal from './PlayerModal';
+import NewPlayerModal from './NewPlayerModal';
 import { translate } from 'react-i18next';
 
 import * as realApi from '../api/Api';
@@ -12,7 +12,6 @@ class TeamForm extends React.Component {
 		super(props);
 
 		this.players = [];
-		this.renderCount = 0;
 
 		this.state = {
 		};
@@ -39,6 +38,7 @@ class TeamForm extends React.Component {
 	//update players list
 	updatePlayers = () => {
 		console.log("fetching players");
+		console.log(this.state);
 		if (this.props.teamId && !this.state.rerender){
 			console.log("really fetching players");
 			realApi.fetchPlayers(this.props.teamId).then(apiPlayers => {
@@ -50,6 +50,11 @@ class TeamForm extends React.Component {
 
 	updateTeam = (team) => {
 		this.props.saveTeam(team);
+	}
+
+	savePlayer = () => {
+		console.log("TF save player");
+		this.updatePlayers();
 	}
 
 	//for deleting selected team
@@ -104,10 +109,12 @@ class TeamForm extends React.Component {
 				<div className="row">
 					<div className="col-md-8">
 						<p className="text-center">
-							<button type="button" className="btn btn-success">{ t('TEAM.ADD_PLAYER') }</button>&nbsp;
+							<button type="button" className="btn btn-success" name="newPlayerButton" data-toggle="modal" data-target="#newPlayerModal">
+								{ t('TEAM.ADD_PLAYER') }</button>&nbsp;
 							<button type="button" className="btn btn-warning" onClick={this.deleteTeam} >{ t('TEAM.REMOVE_TEAM') }</button>
 						</p>
 					</div>
+					<NewPlayerModal savePlayer={this.savePlayer} teamId={this.props.teamId} modalTitle={ t('TEAM.ADD_PLAYER') } />
 				</div>
 			</div>
 		)

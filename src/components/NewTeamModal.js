@@ -64,7 +64,6 @@ class NewTeamModal extends React.Component {
 						<div className="modal-body">
 							<label>{ t('INDEX.NAME') }</label>
 							<input className="form-control" name="teamName" type="text" value={this.state.name} onChange={(e) => this.nameHandler(e)}/>
-							<input type="hidden" name="teamId" value={this.state.teamId} />
 							<br />
 							<label>{ t('INDEX.SPORT') }</label>
 							<select name="selectedTeam" className="form-control select-inline" onChange={(e) => this.sportHandler(e)} value={this.state.currentTeam}>
