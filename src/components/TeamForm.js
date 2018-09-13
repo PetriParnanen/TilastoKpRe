@@ -1,6 +1,7 @@
 import React from "react";
 import EditTeamModal from './EditTeamModal';
 import NewPlayerModal from './NewPlayerModal';
+import EditPlayerModal from './EditPlayerModal';
 import { translate } from 'react-i18next';
 
 import * as realApi from '../api/Api';
@@ -14,9 +15,12 @@ class TeamForm extends React.Component {
 		this.players = [];
 
 		this.state = {
+			selectedPlayer: ""
 		};
 
 		this.deleteTeam = this.deleteTeam.bind(this);
+		this.deletePlayer = this.deletePlayer.bind(this);
+		this.replacePlayer = this.replacePlayer.bind(this);
 	}
 
 	componentDidMount() {
@@ -42,10 +46,16 @@ class TeamForm extends React.Component {
 		if (this.props.teamId && !this.state.rerender){
 			console.log("really fetching players");
 			realApi.fetchPlayers(this.props.teamId).then(apiPlayers => {
-				this.players = apiPlayers.data;
+				this.players = apiPlayers.data.sort((a,b) => a.number - b.number); // putting these in order by their shirt numbers
 				this.setState({players: apiPlayers.data, rerender: true, teamId: this.props.teamId});
 			}).catch(() => window.alert(i18n.t('DB.ERR.DBERROR')));
 		}
+	}
+
+	replacePlayer = (player) => {
+		console.log("replace player");
+		this.setState({selectedPlayer: player, rerender: false});
+		console.log(this.state);
 	}
 
 	updateTeam = (team) => {
@@ -54,17 +64,28 @@ class TeamForm extends React.Component {
 
 	savePlayer = () => {
 		console.log("TF save player");
+		this.setState({rerender: false});
 		this.updatePlayers();
 	}
 
 	//for deleting selected team
-	deleteTeam(){
+	deleteTeam = () => {
 		realApi.deleteTeam(this.props.teamId).then(() => {
 			this.props.deleteTeam();
 		}).catch(() => window.alert(i18n.t('DB.ERR.DBERROR')));
 	}
 
+	// delete player from team
+	deletePlayer = (e) => {
+		console.log("delete player");
+		realApi.deletePlayer(this.props.teamId, e.target.id).then(() => {
+			this.setState({rerender: false});
+			this.updatePlayers();
+		}).catch(() => window.alert(i18n.t('DB.ERR.DBERROR')));
+	}
+
 	render(){
+		console.log("TF render");
 
 		//translator loads page with empty props and it creates an error, so printing empty page
 		if (typeof(this.props.teamId) === "undefined"){
@@ -79,6 +100,7 @@ class TeamForm extends React.Component {
 
 		// just in case if team is not found it will print empty and not an error
 		const teamT = this.props.teamsList.find( e => e._id === this.props.teamId );
+		if (typeof(teamT) === "undefined") { return ("") };
 		const teamName = teamT.name;
 		const teamSport = teamT.sportId.name;
 
@@ -101,16 +123,26 @@ class TeamForm extends React.Component {
 					<div className="col-md-2"><b>{ t('TEAM.PLAYERS') }</b></div>
 					<div className="col-md-6">
 						{this.players && this.players.map(val => (
-							<div key={val._id}>{val._id}</div>
+							<div className="row" key={ val._id }>
+								<div className="col-md-6">{ val.nickname && val.nickname != '' ? val.nickname : val.player_id.firstname }</div>
+								<div className="col-md-2">{val.number}</div>
+								<div className="col-md-2">
+									<button type="button" className="btn btn-primary" 
+										name="editPlayerButton" onClick = {() => this.replacePlayer(val)}
+										data-toggle="modal" data-target="#editPlayerModal">
+										{ t('TEAM.EDIT_PLAYER') }</button></div>
+								<div className="col-md-2"><button type="button" className="btn btn-warning" onClick={this.deletePlayer} id={val._id}>
+									{ t('TEAM.REMOVE_PLAYER') }</button></div>
+							</div>
 						))}
-
+						<EditPlayerModal savePlayer={this.savePlayer} teamId={this.props.teamId} modalTitle={ t('TEAM.EDIT_PLAYER') }  player={this.state.selectedPlayer} />
 					</div>
 				</div>
 				<div className="row">
 					<div className="col-md-8">
 						<p className="text-center">
 							<button type="button" className="btn btn-success" name="newPlayerButton" data-toggle="modal" data-target="#newPlayerModal">
-								{ t('TEAM.ADD_PLAYER') }</button>&nbsp;
+								{ t('TEAM.ADD_PLAYER') }</button>{" "}
 							<button type="button" className="btn btn-warning" onClick={this.deleteTeam} >{ t('TEAM.REMOVE_TEAM') }</button>
 						</p>
 					</div>

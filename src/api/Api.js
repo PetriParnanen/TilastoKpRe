@@ -60,3 +60,17 @@ export const savePlayer = (teamId, player) => {
 	if (!player || !teamId) { return Promise.reject('DB.ERR.INCORRECTFETCHREQUEST') }; // if no player or team id return promise reject
 	return axios.post(apiServer+`/playerlist/team/${teamId}`, player, { headers: { 'x-access-token': userApi.getToken() }})
 }
+
+//edit player
+export const updatePlayer = (teamId, playerId, player) => {
+	console.log("update player "+player.firstname);
+	if (!player || !teamId || !playerId) { return Promise.reject('DB.ERR.INCORRECTFETCHREQUEST') }; // if no player or team id return promise reject
+	return axios.put(apiServer+`/playerlist/team/${teamId}/${playerId}`, player, { headers: { 'x-access-token': userApi.getToken() }})
+}
+
+//delete player
+export const deletePlayer = (teamId, playerId) => {
+	console.log("delete player "+playerId);
+	if (!playerId || !teamId) { return Promise.reject('DB.ERR.INCORRECTFETCHREQUEST') }; // if no player or team id return promise reject
+	return axios.delete(apiServer+`/playerlist/team/${teamId}/${playerId}`, { headers: { 'x-access-token': userApi.getToken() }})
+}

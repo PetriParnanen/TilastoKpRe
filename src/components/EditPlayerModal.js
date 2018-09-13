@@ -4,28 +4,57 @@ import { translate } from 'react-i18next';
 import i18n from './i18n';
 import PropTypes from 'prop-types';
 
-class NewPlayerModal extends React.Component {
+class EditPlayerModal extends React.Component {
 	constructor(props){
 		super(props);
 
 		this.state = {
+			playerId: "",
 			firstname: "",
 			lastname: "",
 			nickname: "",
 			number: "",
-			joining_date: ""
+			joining_date: "",
+			leaving_date: ""
 		}
 
 		this.handleSave = this.handleSave.bind(this);
 	}
 
+	static getDerivedStateFromProps(nextProps, prevState) {
+		console.log("GTS");
+		console.log(nextProps);
+    	if(nextProps.hasOwnProperty('player') && typeof nextProps.player !== "undefined" && nextProps.player !== ""
+    		&& nextProps.player._id !== prevState.playerId){
+    			//this date handling is awful right now, but gotta go now
+    			const joinDay = new Date(nextProps.player.joining_date);
+    			let jDay = (joinDay.getDate() < 10 ? "0" : "")+joinDay.getDate();
+    			let jMonth = (joinDay.getMonth()+1 < 10 ? "0" : "")+(joinDay.getMonth()+1);
+    			const jDate = joinDay.getFullYear()+"-"+jMonth+"-"+jDay;
+    			const leavDay = new Date(nextProps.player.leaving_date);
+    			let lDay = (leavDay.getDate() < 10 ? "0" : "")+leavDay.getDate();
+    			let lMonth = (leavDay.getMonth()+1 < 10 ? "0" : "")+(leavDay.getMonth()+1);
+    			const lDate = leavDay.getFullYear()+"-"+lMonth+"-"+lDay;
+				return({
+					firstname: nextProps.player.player_id.firstname,
+					lastname: nextProps.player.player_id.lastname,
+					nickname: nextProps.player.nickname,
+					number: nextProps.player.number,
+					joining_date: jDate,
+					leaving_date: lDate,
+					playerId: nextProps.player._id
+				})
+		} else { return null };
+	}
+
 	fieldHandler(e){
+		console.log(e.target.value);
 		this.setState({ [e.target.name]: e.target.value, error: e.target.validationMessage });
 	}
 
     handleSave(){
     	console.log("save player");
-    	const { joining_date, ...newPlayer } = this.state; //I do know it would be better to use datepicker, but make it work with this now first
+    	const { joining_date, leaving_date, ...newPlayer } = this.state; //I do know it would be better to use datepicker, but make it work with this now first
 
     	if (this.state.firstname === null || this.state.firstname === "" ||
     		this.state.lastname === null || this.state.lastname === "" ||
@@ -35,13 +64,17 @@ class NewPlayerModal extends React.Component {
     		window.alert(i18n.t('PLAYER.INVALIDSHIRTNUMBER')); 		
     	} else if (this.state.joining_date && !(this.state.joining_date.match(/^[0-9]{4}-[0-9]{1,2}-[0-9]{1,2}$/))){
     		window.alert(i18n.t('PLAYER.INVALIDJOININGDATE'));
+    	} else if (this.state.leaving_date && !(this.state.leaving_date.match(/^[0-9]{4}-[0-9]{1,2}-[0-9]{1,2}$/))){
+    		window.alert(i18n.t('PLAYER.INVALIDLEAVINGDATE'));
     	} else {
     		let jDate = new Date(joining_date); //convert given date to date object used in node.js back
     		newPlayer.joining_date = jDate;
-    		realApi.savePlayer(this.props.teamId, newPlayer)
+    		let lDate = new Date(leaving_date);
+    		newPlayer.leaving_date = lDate;
+    		realApi.updatePlayer(this.props.teamId, this.state.playerId, newPlayer)
     		.then((player) => {
     			window.alert(i18n.t('PLAYER.SAVESUCCESS'));
-    			document.getElementById("hidePopupBtn3").click();
+    			document.getElementById("hidePopupBtn4").click();
     			this.props.savePlayer();
     		}).catch(() => window.alert("NPM "+i18n.t('DB.ERR.DBERROR')));
     	}
@@ -50,10 +83,11 @@ class NewPlayerModal extends React.Component {
 	render() {
 		const { t } = this.props;
 
-		console.log("NPM render");
+		console.log("EPM render");
+		console.log(this.state);
 
 		return (
-			<div className="modal fade" id="newPlayerModal" role="dialog" tab-index="-1" data-backdrop="static" data-keyboard="false" aria-labelledby="playerModalLabel" aria-hidden="true">
+			<div className="modal fade" id="editPlayerModal" role="dialog" tab-index="-1" data-backdrop="static" data-keyboard="false" aria-labelledby="playerModalLabel" aria-hidden="true">
 				<div className="modal-dialog" role="document">
 					<div className="modal-content">
 					<div className="modal-header">
@@ -93,9 +127,15 @@ class NewPlayerModal extends React.Component {
 								<input className="form-control" name="joining_date" value={this.state.joining_date} type="date" onChange={(e) => this.fieldHandler(e)} />
 							</div>
 						</div>
+						<div className="row">
+							<div className="col-md-12">
+								<label>{ t('PLAYER.LEAVING') }</label>
+								<input className="form-control" name="leaving_date" value={this.state.leaving_date} type="date" onChange={(e) => this.fieldHandler(e)} />
+							</div>
+						</div>
 						<div className="modal-footer">
 							<button type="button" className="btn btn-primary" onClick= {() => { this.handleSave() }}>{ t('BUTTON_SAVE') }</button>
-							<button id="hidePopupBtn3" type="button" className="btn btn-secondary" data-dismiss="modal">{ t('BUTTON_CANCEL') }</button>
+							<button id="hidePopupBtn4" type="button" className="btn btn-secondary" data-dismiss="modal">{ t('BUTTON_CANCEL') }</button>
 						</div>
 					</div>
 					</div>
@@ -105,10 +145,11 @@ class NewPlayerModal extends React.Component {
 	}
 }
 
-NewPlayerModal.propTypes = {
+EditPlayerModal.propTypes = {
 	savePlayer: PropTypes.func,
 	modalTitle: PropTypes.string,
 	teamId: PropTypes.string,
+	player: PropTypes.obj,
 }
 
-export default translate('common')(NewPlayerModal);
+export default translate('common')(EditPlayerModal);
