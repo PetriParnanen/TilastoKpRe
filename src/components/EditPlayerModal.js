@@ -44,7 +44,8 @@ class EditPlayerModal extends React.Component {
 					leaving_date: lDate,
 					playerId: nextProps.player._id
 				})
-		} else { return null };
+		}
+		return null;
 	}
 
 	fieldHandler(e){

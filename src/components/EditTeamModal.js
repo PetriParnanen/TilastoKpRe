@@ -33,7 +33,8 @@ class EditTeamModal extends React.Component {
 					sport: nextProps.team.sportId.name,
 					teamId: nextProps.team._id,
 				})
-		} else { return null };
+		}
+		return null;
 	}
 
 	handleSave() {

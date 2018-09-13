@@ -124,7 +124,7 @@ class TeamForm extends React.Component {
 					<div className="col-md-6">
 						{this.players && this.players.map(val => (
 							<div className="row" key={ val._id }>
-								<div className="col-md-6">{ val.nickname && val.nickname != '' ? val.nickname : val.player_id.firstname }</div>
+								<div className="col-md-6">{ val.nickname && val.nickname !== '' ? val.nickname : val.player_id.firstname }</div>
 								<div className="col-md-2">{val.number}</div>
 								<div className="col-md-2">
 									<button type="button" className="btn btn-primary" 
