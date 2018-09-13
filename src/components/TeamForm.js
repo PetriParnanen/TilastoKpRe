@@ -37,6 +37,7 @@ class TeamForm extends React.Component {
 		if (nextProps.teamId !== prevState.teamId && prevState.rerender){
 			return({rerender: false});
 		}
+		return null;
 	}
 
 	//update players list

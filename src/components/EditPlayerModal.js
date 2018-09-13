@@ -150,7 +150,6 @@ EditPlayerModal.propTypes = {
 	savePlayer: PropTypes.func,
 	modalTitle: PropTypes.string,
 	teamId: PropTypes.string,
-	player: PropTypes.obj,
 }
 
 export default translate('common')(EditPlayerModal);
