@@ -27,7 +27,7 @@ class Main extends React.Component{
 					this.props.willLogin();
 				})
 				.catch(error => {
-					window.alert("YY"+i18n.t(error.response.data.message));
+					window.alert(i18n.t(error.response.data.message));
 				});
 		}
 	}
@@ -42,7 +42,7 @@ class Main extends React.Component{
 					window.alert(i18n.t('LOGIN.REG_SUCCESS'));
 				})
 				.catch(error => {
-					window.alert("TT"+i18n.t(error.response.data.message));
+					window.alert(i18n.t(error.response.data.message));
 				});
 		}
 	}
@@ -53,7 +53,7 @@ class Main extends React.Component{
 		return(
 			(userApi.isLoggedIn()?(
 				<main>
-					<Route path='/' component={TeamSelection} />
+					<Route path='/' render={() => (<TeamSelection willLogout={this.props.willLogout} />)} />
 				</main>
 			) : (
 				<LoginForm onLogin={this.onLogin} onRegister={this.onRegister} />

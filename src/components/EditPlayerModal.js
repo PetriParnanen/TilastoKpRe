@@ -77,7 +77,7 @@ class EditPlayerModal extends React.Component {
     			window.alert(i18n.t('PLAYER.SAVESUCCESS'));
     			document.getElementById("hidePopupBtn4").click();
     			this.props.savePlayer();
-    		}).catch(() => window.alert("NPM "+i18n.t('DB.ERR.DBERROR')));
+    		}).catch((error) => window.alert(i18n.t(error.response.data.message)));
     	}
     }
 

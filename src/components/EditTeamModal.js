@@ -51,7 +51,7 @@ class EditTeamModal extends React.Component {
 				document.getElementById("hidePopupBtn2").click();
 				this.props.updateTeam(team);
 			})
-			.catch(() => window.alert("II "+i18n.t('DB.ERR.DBERROR')));
+			.catch((error) => window.alert(i18n.t(error.response.data.message)));
 		}
 	}
 

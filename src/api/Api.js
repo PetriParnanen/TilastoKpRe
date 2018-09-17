@@ -74,3 +74,12 @@ export const deletePlayer = (teamId, playerId) => {
 	if (!playerId || !teamId) { return Promise.reject('DB.ERR.INCORRECTFETCHREQUEST') }; // if no player or team id return promise reject
 	return axios.delete(apiServer+`/playerlist/team/${teamId}/${playerId}`, { headers: { 'x-access-token': userApi.getToken() }})
 }
+
+//Match stuff
+
+//all matches for team
+export const fetchMatches = teamId => {
+	console.log("Fetch matches for team "+teamId);
+	if (!teamId) { return Promise.reject('DB.ERR.INCORRECTFETCHREQUEST') }; // if no team id return promise reject
+	return axios.get(apiServer+`/matchlist/team/${teamId}`, { headers: { 'x-access-token': userApi.getToken() }})
+}

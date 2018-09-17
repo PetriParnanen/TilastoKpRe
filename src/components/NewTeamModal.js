@@ -23,7 +23,7 @@ class NewTeamModal extends React.Component {
 				sports: sports.data,
 				sport: sports.data[0]._id
 			});
-		}).catch(() => window.alert(i18n.t('DB.ERR.DBERROR')));		
+		}).catch((error) => window.alert(i18n.t(error.response.data.message)));		
 	}
 
 	nameHandler(e) {
@@ -47,7 +47,7 @@ class NewTeamModal extends React.Component {
 				document.getElementById("hidePopupBtn").click();
 				this.props.saveTeam(team.data);
 			})
-			.catch(() => window.alert("II "+i18n.t('DB.ERR.DBERROR')));
+			.catch((error) => window.alert(i18n.t(error.response.data.message)));
 		}
 	}
 

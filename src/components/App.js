@@ -46,7 +46,7 @@ class App extends Component {
       <div className="App">
         <Header isLogged={this.state.isLogged} lang={this.state.lng} willLogout={this.willLogout} languageChange={this.languageChange} />
         <div className="container">
-          <Main willLogin={this.willLogin}/>
+          <Main willLogin={this.willLogin} willLogout={this.willLogout} />
         </div>
 
       </div>

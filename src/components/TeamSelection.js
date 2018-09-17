@@ -5,6 +5,7 @@ import StartMatchForm from './StartMatchForm';
 import ReportForm from './ReportForm';
 import NewTeamModal from './NewTeamModal';
 import { translate } from 'react-i18next';
+import PropTypes from 'prop-types';
 
 import * as realApi from '../api/Api';
 import i18n from './i18n';
@@ -105,8 +106,22 @@ class TeamSelection extends React.Component {
 			} else {
 				window.alert("Hmm, update team, i think you shouldnt be here");
 			}
-		}).catch(() => window.alert(i18n.t('DB.ERR.DBERROR')));
+		}).catch((error) => {
+			console.log(error.response.data.message);
+			if (error.response.status === 403){
+				this.logoutNow();
+				window.alert(i18n.t(error.response.data.message)) 
+			} else {
+				window.alert(i18n.t(error.response.data.message))
+			}
+		});
+	}
 
+	logoutNow = () => {
+		localStorage.setItem('currentTeam', "");
+		this.setState({ currentTeam: "" });
+		this.props.willLogout();
+		this.props.history.push('/');
 	}
 
 	saveTeam = (team) => {
@@ -118,6 +133,7 @@ class TeamSelection extends React.Component {
 	deleteTeam = () => {
 		this.setState({ currentTeam: "" });
 		localStorage.setItem('currentTeam', "");
+
 		this.props.history.push('/');
 		this.updateTeams();
 	}
@@ -160,14 +176,18 @@ class TeamSelection extends React.Component {
 			<main>
 				<Switch>
 					<Route exact path='/team' render={() => (<TeamForm teamId={this.state.currentTeam} teamsList={this.state.teams} 
-						saveTeam={this.saveTeam} deleteTeam={this.deleteTeam} /> )} />
-					<Route exact path='/match' render={() => (<StartMatchForm /> )} />
-					<Route exact path='/report' render={() => (<ReportForm />)} />
+						saveTeam={this.saveTeam} deleteTeam={this.deleteTeam} logoutNow={this.logoutNow} /> )} />
+					<Route exact path='/match' render={() => (<StartMatchForm logoutNow={this.logoutNow} /> )} />
+					<Route exact path='/report' render={() => (<ReportForm teamId={this.state.currentTeam} logoutNow={this.logoutNow} />)} />
 				</Switch>
 			</main>
 			</div>
 		)
 	}
+}
+
+TeamSelection.propTypes = {
+	willLogout: PropTypes.func,
 }
 
 export default translate('common')(withRouter(TeamSelection));

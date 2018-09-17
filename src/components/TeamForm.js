@@ -49,7 +49,14 @@ class TeamForm extends React.Component {
 			realApi.fetchPlayers(this.props.teamId).then(apiPlayers => {
 				this.players = apiPlayers.data.sort((a,b) => a.number - b.number); // putting these in order by their shirt numbers
 				this.setState({players: apiPlayers.data, rerender: true, teamId: this.props.teamId});
-			}).catch(() => window.alert(i18n.t('DB.ERR.DBERROR')));
+			}).catch((error) => {
+				if (error.response.status === 403){
+					this.props.logoutNow();
+					window.alert(i18n.t(error.response.data.message)) 
+				} else {
+					window.alert(i18n.t(error.response.data.message))
+				};
+			});
 		}
 	}
 
@@ -71,18 +78,24 @@ class TeamForm extends React.Component {
 
 	//for deleting selected team
 	deleteTeam = () => {
-		realApi.deleteTeam(this.props.teamId).then(() => {
-			this.props.deleteTeam();
-		}).catch(() => window.alert(i18n.t('DB.ERR.DBERROR')));
+		const really = window.confirm(i18n.t('TEAM.REALLYDELETE'));
+		if (really === true){
+			realApi.deleteTeam(this.props.teamId).then(() => {
+				this.props.deleteTeam();
+			}).catch((error) => window.alert(i18n.t(error.response.data.message)));
+		}
 	}
 
 	// delete player from team
 	deletePlayer = (e) => {
 		console.log("delete player");
-		realApi.deletePlayer(this.props.teamId, e.target.id).then(() => {
-			this.setState({rerender: false});
-			this.updatePlayers();
-		}).catch(() => window.alert(i18n.t('DB.ERR.DBERROR')));
+		const really = window.confirm(i18n.t('PLAYER.REALLYDELETE'));
+		if (really === true){
+			realApi.deletePlayer(this.props.teamId, e.target.id).then(() => {
+				this.setState({rerender: false});
+				this.updatePlayers();
+			}).catch((error) => window.alert(i18n.t(error.response.data.message)));
+		}
 	}
 
 	render(){
@@ -158,6 +171,7 @@ TeamForm.propTypes = {
 	teamId: PropTypes.string,
 	teamList: PropTypes.array,
 	saveTeam: PropTypes.func,
+	logoutNow: PropTypes.func,
 }
 
 export default translate('common')(TeamForm);
