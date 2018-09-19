@@ -74,6 +74,10 @@
 	"MATCH.NOMANDATORY": "You need to give, opponent, matchdate and atleast one player",
 	"MATCH.CONFIRM": "There are some chances, if you leave now you will lose all data. Are you sure?",
 
+	"REPORT.PLAYERS": "Player statistics",
+	"REPORT.PLAYERS.TOTAL": "Total",
+	"REPORT.PLAYERS.AVERAGE": "Average",
+	"REPORT.GAMES": "Games",
 	"REPORT.TITLE": "Matchreports",
 	"REPORT.TITLE_HELP": "By clicking opponents name you open match report",
 	"REPORT.NAME": "Teams name",

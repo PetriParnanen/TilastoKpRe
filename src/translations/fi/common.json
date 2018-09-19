@@ -74,6 +74,10 @@
 	"MATCH.NOMANDATORY": "On annettava vastustaja, päivämäärä ja vähintään 1 pelaaja",
 	"MATCH.CONFIRM": "Ottelun tietoja on muutettu. Poistuessa tiedot menetään. Oletko varma, että haluat poistua?",
 
+	"REPORT.PLAYERS": "Pelaajatilastot",
+	"REPORT.PLAYERS.TOTAL": "Yhteensä",
+	"REPORT.PLAYERS.AVERAGE": "Keskiarvo",
+	"REPORT.GAMES": "Ott",
 	"REPORT.TITLE": "Otteluraportit",
 	"REPORT.TITLE_HELP": "Klikkaamalla vastustajan nimeä saa ottelun tiedot esiin",
 	"REPORT.NAME": "Joukkueen nimi",

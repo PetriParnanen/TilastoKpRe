@@ -71,7 +71,7 @@ class TeamSelection extends React.Component {
 	// Change selected team. Also save id to localstorage from where we can fetch it if user decides to refresh or similar
 	handleChange = (event) => {
 		this.setState({ currentTeam: event.target.value,
-			currentSport: this.state.teams.find( e => e._id === event.target.value ).sportId.name });
+			currentSport: this.state.teams.find( e => e._id === event.target.value ).sportId });
 		localStorage.setItem('currentTeam', event.target.value);
 	}
 
@@ -92,15 +92,15 @@ class TeamSelection extends React.Component {
 					currentSport: "" });
 				localStorage.removeItem('currentTeam');
 			} else if (this.state.currentTeam) {
-				this.setState({ currentSport: this.state.teams.find( e => e._id === this.state.currentTeam).sportId.name })
+				this.setState({ currentSport: this.state.teams.find( e => e._id === this.state.currentTeam).sportId })
 			} else if (!this.state.currentTeam) {
 				// if found in storage activate it
 				if (localStorage.getItem('currentTeam')){
 					this.setState({ currentTeam: localStorage.getItem('currentTeam'),
-						currentSport: this.state.teams.find( e => e._id === localStorage.getItem('currentTeam')).sportId.name });
+						currentSport: this.state.teams.find( e => e._id === localStorage.getItem('currentTeam')).sportId });
 				} else {
 					this.setState({ currentTeam: this.state.teams[0]._id,
-						currentSport: this.state.teams[0].sportId.name });
+						currentSport: this.state.teams[0].sportId });
 					localStorage.setItem('currentTeam', this.state.teams[0]._id);
 				}
 			} else {
@@ -143,6 +143,7 @@ class TeamSelection extends React.Component {
 		console.log("team render");
 
 		let zeroTeams = this.state.teams && this.state.teams.length;
+		let sportId = (this.state.currentSport?this.state.currentSport._id:"");
 
 		// If no teams then don't print dropdown
 		// TeamModal opens popup where user can add new teams
@@ -160,9 +161,9 @@ class TeamSelection extends React.Component {
 						</select>
 				</div>
 				}
-				{ zeroTeams ? (
+				{ zeroTeams && this.state.currentSport ? (
 				<div className="col-md-4" name="teamSport">
-					&nbsp;{ t('INDEX.SPORT') }: { t('SPORT.'+this.state.currentSport) }
+					&nbsp;{ t('INDEX.SPORT') }: { t('SPORT.'+this.state.currentSport.name) }
 				</div>
 				) : (
 				<div className="col-md-8"> { t('INDEX.CREATEFIRST') }</div>
@@ -178,7 +179,7 @@ class TeamSelection extends React.Component {
 					<Route exact path='/team' render={() => (<TeamForm teamId={this.state.currentTeam} teamsList={this.state.teams} 
 						saveTeam={this.saveTeam} deleteTeam={this.deleteTeam} logoutNow={this.logoutNow} /> )} />
 					<Route exact path='/match' render={() => (<StartMatchForm logoutNow={this.logoutNow} /> )} />
-					<Route exact path='/report' render={() => (<ReportForm teamId={this.state.currentTeam} logoutNow={this.logoutNow} />)} />
+					<Route exact path='/report' render={() => (<ReportForm teamId={this.state.currentTeam} sportId={sportId} logoutNow={this.logoutNow} />)} />
 				</Switch>
 			</main>
 			</div>

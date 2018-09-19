@@ -1,3 +1,24 @@
+//need own styles for matches. Too many columns
+
+.matchTable {
+	display: block;
+	width: 100%;	
+}
+.tableRow {
+	display: table-row;
+}
+.matchPopupTable {
+	display: table;
+	width: 100%;
+}
+.matchPopupHeaderCell {
+	display: table-cell;
+	width: 50%;
+}
+.matchPopupTableCell {
+	display: table-cell;
+	padding: 1px;
+}
 .Leftie {
   text-align: left;
 }

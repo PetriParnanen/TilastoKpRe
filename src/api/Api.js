@@ -11,6 +11,13 @@ export const fetchSports = () => {
 	return axios.get(apiServer+'/sportlist', { headers: { 'x-access-token': userApi.getToken() }})
 }
 
+export const fetchEvents = sportId => {
+	console.log("api events");
+	console.log(sportId);
+	if (!sportId) { return Promise.reject('DB.ERR.INCORRECTFETCHREQUEST') }; // if no sport id return promise reject
+	return axios.get(apiServer+`/sportlist/event/${sportId}`, { headers: { 'x-access-token': userApi.getToken() }})
+}
+
 //all teams under user. right now api doesn't return all teams
 export const fetchTeams = () => {
 	console.log("api teams");
