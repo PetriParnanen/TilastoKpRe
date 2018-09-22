@@ -51,7 +51,6 @@ class ReportForm extends React.Component {
 				this.players = values[0].data.sort((a,b) => a.number - b.number);
 				this.matches = values[1].data.sort((a,b) => new Date(a.date) - new Date(b.date));
 				this.events = values[2].data.sort((a,b) => a.order - b.order);
-				//console.log(this.matches);
 
 				//we propably need to do those score calculations here for each player and both tables
 				// hmm what is the best way? Go throght all the matches and push player values on array?
@@ -81,13 +80,12 @@ class ReportForm extends React.Component {
 					teamId: this.props.teamId,
 					rerender: true });
 			}).catch((error) => {
-				console.log(error);
-				/*if (error.response.status === 403){
+				if (error.response.status === 403){
 					this.props.logout();
 					window.alert(i18n.t(error.response.data.message))
 				} else {
 					window.alert(i18n.t(error.response.data.message))
-				}*/
+				}
 			})
 		}
 	}
