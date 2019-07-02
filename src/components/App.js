@@ -3,7 +3,7 @@ import './App.css';
 import Header from "./Header";
 import Main from "./Main";
 import * as userApi from '../api/User';
-import { translate } from 'react-i18next';
+import { withTranslation } from 'react-i18next';
 
 class App extends Component {
   constructor(props) {
@@ -25,7 +25,7 @@ class App extends Component {
     }
   }
 
-  componentWillUnMount(){
+  componentWillUnmount(){
   }
 
 
@@ -54,4 +54,4 @@ class App extends Component {
   }
 }
 
-export default translate('common')(App);
+export default withTranslation('common')(App);

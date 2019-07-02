@@ -1,6 +1,6 @@
 import React from "react";
 
-import { translate } from 'react-i18next';
+import { withTranslation } from 'react-i18next';
 
 import * as realApi from '../api/Api';
 import i18n from './i18n';
@@ -156,4 +156,4 @@ ReportForm.propTypes = {
 	logoutNow: PropTypes.func,
 }
 
-export default translate('common')(ReportForm);
+export default withTranslation('common')(ReportForm);

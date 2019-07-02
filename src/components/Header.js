@@ -1,7 +1,7 @@
 import React from 'react';
 import {Link} from 'react-router-dom';
 import PropTypes from 'prop-types';
-import { translate } from 'react-i18next';
+import { withTranslation } from 'react-i18next';
 
 class Header extends React.Component{
 	constructor(props) {
@@ -59,4 +59,4 @@ Header.propTypes = {
 	languageChange: PropTypes.func,
 }
 
-export default translate('common')(Header);
+export default withTranslation('common')(Header);

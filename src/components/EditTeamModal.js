@@ -1,6 +1,6 @@
 import React from "react";
 import * as realApi from '../api/Api';
-import { translate } from 'react-i18next';
+import { withTranslation } from 'react-i18next';
 import i18n from './i18n';
 import PropTypes from 'prop-types';
 
@@ -89,4 +89,4 @@ EditTeamModal.propTypes = {
 	team: PropTypes.object,
 }
 
-export default translate('common')(EditTeamModal);
+export default withTranslation('common')(EditTeamModal);

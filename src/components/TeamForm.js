@@ -2,7 +2,7 @@ import React from "react";
 import EditTeamModal from './EditTeamModal';
 import NewPlayerModal from './NewPlayerModal';
 import EditPlayerModal from './EditPlayerModal';
-import { translate } from 'react-i18next';
+import { withTranslation } from 'react-i18next';
 
 import * as realApi from '../api/Api';
 import i18n from './i18n';
@@ -174,4 +174,4 @@ TeamForm.propTypes = {
 	logoutNow: PropTypes.func,
 }
 
-export default translate('common')(TeamForm);
+export default withTranslation('common')(TeamForm);

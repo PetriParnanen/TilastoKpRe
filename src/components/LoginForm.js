@@ -1,6 +1,6 @@
 import React from "react";
 import PropTypes from 'prop-types';
-import { translate } from 'react-i18next';
+import { withTranslation } from 'react-i18next';
 
 class LoginForm extends React.Component {
 	constructor(props) {
@@ -62,4 +62,4 @@ LoginForm.propTypes = {
 	onRegister: PropTypes.func,
 }
 
-export default translate('common')(LoginForm);
+export default withTranslation('common')(LoginForm);

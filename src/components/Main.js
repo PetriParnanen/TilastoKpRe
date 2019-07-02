@@ -1,5 +1,5 @@
 import React from 'react';
-import {Route} from 'react-router-dom';
+import { Route } from 'react-router-dom';
 import LoginForm from './LoginForm';
 import TeamSelection from './TeamSelection';
 import * as userApi from '../api/User';

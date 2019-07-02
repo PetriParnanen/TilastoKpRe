@@ -1,10 +1,10 @@
 import React from "react";
-import {Switch,Route,withRouter} from 'react-router-dom';
+import { Switch,Route,withRouter } from 'react-router-dom';
 import TeamForm from './TeamForm';
 import StartMatchForm from './StartMatchForm';
 import ReportForm from './ReportForm';
 import NewTeamModal from './NewTeamModal';
-import { translate } from 'react-i18next';
+import { withTranslation } from 'react-i18next';
 import PropTypes from 'prop-types';
 
 import * as realApi from '../api/Api';
@@ -191,4 +191,4 @@ TeamSelection.propTypes = {
 	willLogout: PropTypes.func,
 }
 
-export default translate('common')(withRouter(TeamSelection));
+export default withTranslation('common')(withRouter(TeamSelection));
